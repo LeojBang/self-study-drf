@@ -1,0 +1,10 @@
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import AllowAny
+from authentication.models import User
+from authentication.serializers import UserSerializer
+
+
+class UserViewSet(ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (AllowAny,)  # разрешаем доступ всем (например, для регистрации)
