@@ -5,7 +5,10 @@ from authentication.serializers import UserSerializer
 
 
 class UserSerializerTests(APITestCase):
+    """Тесты для проверки валидации и создания пользователей через UserSerializer"""
+
     def test_create_user_success(self):
+        """Тест успешного создания пользователя с валидными данными"""
         data = {
             "email": "user@example.com",
             "role": User.Role.STUDENT,
@@ -24,6 +27,7 @@ class UserSerializerTests(APITestCase):
         self.assertTrue(user.is_active)
 
     def test_password_mismatch(self):
+        """Тест ошибки валидации при несовпадении паролей"""
         data = {
             "email": "user@example.com",
             "role": User.Role.STUDENT,
@@ -41,6 +45,7 @@ class UserSerializerTests(APITestCase):
         )
 
     def test_cannot_choose_admin_role(self):
+        """Тест запрета самостоятельного назначения роли администратора"""
         data = {
             "email": "adminlike@example.com",
             "role": User.Role.ADMIN,

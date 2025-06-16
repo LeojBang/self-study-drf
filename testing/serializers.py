@@ -4,12 +4,22 @@ from .models import Answer, Question, Test
 
 
 class AnswerSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для ответов на вопросы теста.
+    Используется для отображения вариантов ответов без информации о правильности.
+    """
+
     class Meta:
         model = Answer
         fields = ["id", "text"]
 
 
 class QuestionSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для вопросов теста.
+    Включает вложенные варианты ответов (без информации о правильности).
+    """
+
     answers = AnswerSerializer(many=True, read_only=True)
 
     class Meta:
@@ -18,6 +28,11 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 
 class TestSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для тестов.
+    Включает вложенные вопросы с вариантами ответов.
+    """
+
     questions = QuestionSerializer(many=True, read_only=True)
 
     class Meta:
@@ -26,9 +41,25 @@ class TestSerializer(serializers.ModelSerializer):
 
 
 class UserAnswerSerializer(serializers.Serializer):
-    question_id = serializers.IntegerField()
-    selected_answer_id = serializers.IntegerField()
+    """
+    Сериализатор для ответа пользователя на один вопрос теста.
+    Используется при отправке результатов теста.
+    """
+
+    question_id = serializers.IntegerField(
+        help_text="ID вопроса, на который отвечает пользователь"
+    )
+    selected_answer_id = serializers.IntegerField(
+        help_text="ID выбранного варианта ответа"
+    )
 
 
 class SubmitTestSerializer(serializers.Serializer):
-    answers = UserAnswerSerializer(many=True)
+    """
+    Сериализатор для отправки результатов теста.
+    Содержит список ответов пользователя на вопросы теста.
+    """
+
+    answers = UserAnswerSerializer(
+        many=True, help_text="Список ответов пользователя на вопросы теста"
+    )

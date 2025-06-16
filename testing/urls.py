@@ -7,9 +7,11 @@ from .views import SubmitTestView, TestViewSet
 app_name = TestingConfig.name
 
 router = DefaultRouter()
-router.register("tests", TestViewSet)
+router.register("tests", TestViewSet)  # Эндпоинты для работы с тестами (чтение)
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("tests/<int:test_id>/submit/", SubmitTestView.as_view(), name="submit-test"),
+    path(
+        "tests/<int:test_id>/submit/", SubmitTestView.as_view(), name="submit-test"
+    ),  # Эндпоинт для отправки результатов теста
 ]

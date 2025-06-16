@@ -11,8 +11,17 @@ from testing.models import TestAttempt as TestAttemptModel
 
 
 class TestingViewsTestCase(APITestCase):
+    """
+    Тесты для модуля тестирования.
+    Проверяют работу API для получения тестов и отправки результатов.
+    """
+
     def setUp(self):
-        # Создаём пользователя и курс
+        """
+        Настройка тестовых данных:
+        - Создаем пользователя, курс, раздел и материал
+        - Создаем тест с одним вопросом и двумя вариантами ответа (правильный и неправильный)
+        """
         self.user = User.objects.create_user(
             email="student@example.com", password="testpass", role="student"
         )
@@ -37,6 +46,10 @@ class TestingViewsTestCase(APITestCase):
         )
 
     def test_get_tests(self):
+        """
+        Тест получения списка тестов.
+        Проверяет, что API возвращает корректный список тестов.
+        """
         url = reverse("testing:test-list")  # URL от ViewSet
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -47,6 +60,11 @@ class TestingViewsTestCase(APITestCase):
         self.assertEqual(str(self.wrong_answer), "3 (неверный)")
 
     def test_submit_test_with_correct_answer(self):
+        """
+        Тест отправки теста с правильным ответом.
+        Проверяет, что система корректно обрабатывает правильный ответ
+        и возвращает 100% результат.
+        """
         url = reverse("testing:submit-test", args=[self.test.id])
         data = {
             "answers": [
@@ -67,6 +85,11 @@ class TestingViewsTestCase(APITestCase):
         self.assertTrue(attempt.passed)
 
     def test_submit_test_with_wrong_answer(self):
+        """
+        Тест отправки теста с неправильным ответом.
+        Проверяет, что система корректно обрабатывает неправильный ответ
+        и возвращает 0% результат.
+        """
         url = reverse("testing:submit-test", args=[self.test.id])
         data = {
             "answers": [
@@ -87,6 +110,11 @@ class TestingViewsTestCase(APITestCase):
         self.assertFalse(attempt.passed)
 
     def test_submit_test_with_missing_question(self):
+        """
+        Тест отправки теста с несуществующим вопросом.
+        Проверяет, что система корректно обрабатывает отсутствующий вопрос
+        (игнорирует его) и возвращает корректный результат.
+        """
         url = reverse("testing:submit-test", args=[self.test.id])
         data = {
             "answers": [
@@ -98,7 +126,6 @@ class TestingViewsTestCase(APITestCase):
         }
 
         response = self.client.post(url, data, format="json")
-        # Вопрос не найден, но система игнорирует — проверим, что он просто не считается
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["score"], 0)
         self.assertFalse(response.data["passed"])

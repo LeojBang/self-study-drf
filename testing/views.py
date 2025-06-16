@@ -9,14 +9,52 @@ from .serializers import SubmitTestSerializer, TestSerializer
 
 
 class TestViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    ViewSet для работы с тестами (только чтение).
+
+    Доступные действия:
+    - list: Получить список всех тестов
+    - retrieve: Получить детальную информацию о тесте (с вопросами и ответами)
+
+    Тесты доступны только для чтения всем аутентифицированным пользователям.
+    """
+
     queryset = Test.objects.all()
     serializer_class = TestSerializer
 
 
 class SubmitTestView(APIView):
+    """
+    API для отправки результатов теста.
 
-    @swagger_auto_schema(request_body=SubmitTestSerializer)
+    Принимает список ответов пользователя на вопросы теста,
+    вычисляет результат (процент правильных ответов) и сохраняет попытку.
+
+    Тест считается пройденным, если набрано 70% или более правильных ответов.
+    """
+
+    @swagger_auto_schema(
+        request_body=SubmitTestSerializer,
+        responses={
+            200: "Результат тестирования (score: процент, passed: пройден ли тест)",
+            404: "Тест не найден",
+            400: "Неверный формат данных",
+        },
+        operation_description="Отправить результаты прохождения теста",
+        operation_summary="Отправка результатов теста",
+    )
     def post(self, request, test_id):
+        """
+        Обрабатывает отправку результатов теста.
+
+        Параметры:
+        - test_id: ID теста, который проходит пользователь
+        - answers: список ответов пользователя в формате {question_id, selected_answer_id}
+
+        Возвращает:
+        - score: процент правильных ответов
+        - passed: true/false в зависимости от того, пройден ли тест (>=70%)
+        """
         serializer = SubmitTestSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -39,7 +77,7 @@ class SubmitTestView(APIView):
                 continue
 
         score = round((correct / total) * 100)
-        passed = score >= 70  # можно вынести в настройки
+        passed = score >= 70
 
         TestAttempt.objects.create(
             user=request.user, test=test, score=score, passed=passed
