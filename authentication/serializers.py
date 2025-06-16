@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from authentication.models import User
 
 
@@ -8,7 +9,15 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("email", 'role', "first_name", "last_name", "city", "password", "password_confirm")
+        fields = (
+            "email",
+            "role",
+            "first_name",
+            "last_name",
+            "city",
+            "password",
+            "password_confirm",
+        )
 
     def validate(self, data):
         if data["password"] != data["password_confirm"]:

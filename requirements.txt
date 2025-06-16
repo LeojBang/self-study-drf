@@ -1,0 +1,14 @@
+black==25.1.0
+coverage==7.9.1
+Django==5.2.3
+django-cors-headers==4.7.0
+djangorestframework==3.16.0
+djangorestframework_simplejwt==5.5.0
+drf-yasg==1.21.10
+flake8==7.2.0
+isort==6.0.1
+psycopg2-binary==2.9.10
+pytest==8.4.0
+pytest-cov==6.2.1
+pytest-django==4.11.1
+python-dotenv==1.1.0

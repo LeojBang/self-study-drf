@@ -1,6 +1,7 @@
 from django.urls import path
 from rest_framework.routers import SimpleRouter
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework_simplejwt.views import (TokenObtainPairView,
+                                            TokenRefreshView)
 
 from authentication.apps import AuthenticationConfig
 from authentication.views import UserViewSet
@@ -19,6 +20,6 @@ urlpatterns = [
         "token/refresh/",
         TokenRefreshView.as_view(),
         name="token_refresh",
-    )
+    ),
 ]
 urlpatterns += router.urls

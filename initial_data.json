@@ -1,0 +1,122 @@
+[
+  {
+    "model": "content.course",
+    "pk": 1,
+    "fields": {
+      "title": "Python с нуля",
+      "description": "Базовый курс по Python.",
+      "owner": 1
+    }
+  },
+  {
+    "model": "content.section",
+    "pk": 1,
+    "fields": {
+      "title": "Введение",
+      "course": 1
+    }
+  },
+  {
+    "model": "content.material",
+    "pk": 1,
+    "fields": {
+      "title": "Что такое Python?",
+      "content": "Python — это интерпретируемый язык программирования общего назначения.",
+      "section": 1
+    }
+  },
+  {
+    "model": "content.course",
+    "pk": 2,
+    "fields": {
+      "title": "Django для начинающих",
+      "description": "Курс по созданию веб-приложений на Django.",
+      "owner": 1
+    }
+  },
+  {
+    "model": "content.section",
+    "pk": 2,
+    "fields": {
+      "title": "Основы Django",
+      "course": 2
+    }
+  },
+  {
+    "model": "content.material",
+    "pk": 2,
+    "fields": {
+      "title": "Что такое Django?",
+      "content": "Django — это высокоуровневый веб-фреймворк на Python.",
+      "section": 2
+    }
+  },
+  {
+    "model": "testing.test",
+    "pk": 1,
+    "fields": {
+      "material": 1,
+      "title": "Проверка знаний о Python"
+    }
+  },
+  {
+    "model": "testing.question",
+    "pk": 1,
+    "fields": {
+      "test": 1,
+      "text": "Какой тип языка Python?"
+    }
+  },
+  {
+    "model": "testing.answer",
+    "pk": 1,
+    "fields": {
+      "question": 1,
+      "text": "Компилируемый",
+      "is_correct": false
+    }
+  },
+  {
+    "model": "testing.answer",
+    "pk": 2,
+    "fields": {
+      "question": 1,
+      "text": "Интерпретируемый",
+      "is_correct": true
+    }
+  },
+  {
+    "model": "testing.test",
+    "pk": 2,
+    "fields": {
+      "material": 2,
+      "title": "Проверка знаний о Django"
+    }
+  },
+  {
+    "model": "testing.question",
+    "pk": 2,
+    "fields": {
+      "test": 2,
+      "text": "Что такое Django?"
+    }
+  },
+  {
+    "model": "testing.answer",
+    "pk": 3,
+    "fields": {
+      "question": 2,
+      "text": "Язык программирования",
+      "is_correct": false
+    }
+  },
+  {
+    "model": "testing.answer",
+    "pk": 4,
+    "fields": {
+      "question": 2,
+      "text": "Веб-фреймворк на Python",
+      "is_correct": true
+    }
+  }
+]
