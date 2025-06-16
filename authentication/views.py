@@ -7,4 +7,4 @@ from authentication.serializers import UserSerializer
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (AllowAny,)  # разрешаем доступ всем (например, для регистрации)
+    permission_classes = (AllowAny,)
