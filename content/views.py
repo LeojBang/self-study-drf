@@ -4,8 +4,7 @@ from rest_framework import viewsets
 from authentication.permissions import IsAdmin, IsOwner, IsTeacher
 
 from .models import Course, Material, Section
-from .serializers import (CourseSerializer, MaterialSerializer,
-                          SectionSerializer)
+from .serializers import CourseSerializer, MaterialSerializer, SectionSerializer
 
 
 class CourseViewSet(viewsets.ModelViewSet):

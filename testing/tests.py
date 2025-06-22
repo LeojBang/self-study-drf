@@ -17,11 +17,6 @@ class TestingViewsTestCase(APITestCase):
     """
 
     def setUp(self):
-        """
-        Настройка тестовых данных:
-        - Создаем пользователя, курс, раздел и материал
-        - Создаем тест с одним вопросом и двумя вариантами ответа (правильный и неправильный)
-        """
         self.user = User.objects.create_user(
             email="student@example.com", password="testpass", role="student"
         )
@@ -33,7 +28,6 @@ class TestingViewsTestCase(APITestCase):
             title="Material", content="Content", section=section
         )
 
-        # Создаём тест, вопрос и ответы
         self.test = TestModel.objects.create(title="Sample Test", material=material)
         self.question = QuestionModel.objects.create(
             test=self.test, text="What is 2+2?"
@@ -74,8 +68,8 @@ class TestingViewsTestCase(APITestCase):
                 }
             ]
         }
-
         response = self.client.post(url, data, format="json")
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["score"], 100)
         self.assertTrue(response.data["passed"])
@@ -83,6 +77,8 @@ class TestingViewsTestCase(APITestCase):
         attempt = TestAttemptModel.objects.get(user=self.user, test=self.test)
         self.assertEqual(attempt.score, 100)
         self.assertTrue(attempt.passed)
+        self.assertEqual(len(response.data["details"]), 1)
+        self.assertTrue(response.data["details"][0]["is_correct"])
 
     def test_submit_test_with_wrong_answer(self):
         """
@@ -108,28 +104,24 @@ class TestingViewsTestCase(APITestCase):
         attempt = TestAttemptModel.objects.get(user=self.user, test=self.test)
         self.assertEqual(attempt.score, 0)
         self.assertFalse(attempt.passed)
+        self.assertEqual(len(response.data["details"]), 1)
+        self.assertFalse(response.data["details"][0]["is_correct"])
 
-    def test_submit_test_with_missing_question(self):
+    def test_submit_test_with_invalid_question_id(self):
         """
-        Тест отправки теста с несуществующим вопросом.
-        Проверяет, что система корректно обрабатывает отсутствующий вопрос
-        (игнорирует его) и возвращает корректный результат.
+        Тест: один из question_id не существует.
+        Ожидаем 400 Bad Request.
         """
         url = reverse("testing:submit-test", args=[self.test.id])
         data = {
             "answers": [
                 {
-                    "question_id": 9999,  # Несуществующий вопрос
+                    "question_id": 9999,
                     "selected_answer_id": self.correct_answer.id,
                 }
             ]
         }
-
         response = self.client.post(url, data, format="json")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["score"], 0)
-        self.assertFalse(response.data["passed"])
 
-        attempt = TestAttemptModel.objects.get(user=self.user, test=self.test)
-        self.assertEqual(attempt.score, 0)
-        self.assertFalse(attempt.passed)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("detail", response.data)

@@ -6,12 +6,15 @@ from authentication.models import User
 class Command(BaseCommand):
     """Команда для создания администратора"""
 
+    help = "Создание суперпользователя при необходимости"
+
     def handle(self, *args, **kwargs):
-        user = User.objects.create(
-            email="admin@example.com", first_name="Admin", role="admin"
-        )
-        user.set_password("12345")
-        user.is_active = True
-        user.is_staff = True
-        user.is_superuser = True
-        user.save()
+        if not User.objects.filter(email="admin@example.com").exists():
+            User.objects.create_superuser(
+                email="admin@example.com",
+                password="12345",
+                role="admin",
+            )
+            self.stdout.write(self.style.SUCCESS("Суперпользователь создан"))
+        else:
+            self.stdout.write("Суперпользователь уже существует")

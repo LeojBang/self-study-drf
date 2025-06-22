@@ -122,12 +122,20 @@ AUTH_USER_MODEL = "authentication.User"
 
 # Настройки CORS
 CORS_ALLOWED_ORIGINS = [
-    "https://read-only.example.com",
-    "https://read-and-write.example.com",
+    "http://localhost",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:8000",
 ]
+
 CSRF_TRUSTED_ORIGINS = [
-    "https://read-and-write.example.com",
+    "http://localhost",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:8000",
 ]
+
+TEST_PASS_THRESHOLD = 70
 
 LANGUAGE_CODE = "ru-ru"
 
