@@ -63,6 +63,7 @@ class Section(models.Model):
         verbose_name_plural = "Разделы курса"
 
 
+# https://www.youtube.com/@sobolevn/videos
 class Material(models.Model):
     """
     Модель учебного материала. Каждый материал принадлежит определенному разделу
