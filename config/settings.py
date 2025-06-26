@@ -119,6 +119,8 @@ SWAGGER_SETTINGS = {
 SWAGGER_USE_COMPAT_RENDERERS = False
 
 AUTH_USER_MODEL = "authentication.User"
+# Разрешить запросы с любых доменов (для разработки)
+# CORS_ALLOW_ALL_ORIGINS = True
 
 # Настройки CORS
 CORS_ALLOWED_ORIGINS = [
